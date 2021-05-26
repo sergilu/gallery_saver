@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.text.TextUtils
@@ -54,7 +55,7 @@ internal object FileUtils {
         val imageFilePath = File(albumDir, file.name).absolutePath
 
         val values = ContentValues()
-        if (android.os.Build.VERSION.SDK_INT < 29) {
+        if (Build.VERSION.SDK_INT < 29) {
             values.put(MediaStore.Images.ImageColumns.DATA, imageFilePath)
         }
 
@@ -65,7 +66,7 @@ internal object FileUtils {
         values.put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
         values.put(MediaStore.Images.Media.SIZE, file.length())
 
-        if (android.os.Build.VERSION.SDK_INT >= 29) {
+        if (Build.VERSION.SDK_INT >= 29) {
             values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
             values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + folderName)
         }
@@ -85,7 +86,7 @@ internal object FileUtils {
                     outputStream.write(source)
                 }
 
-                if (imageUri != null && android.os.Build.VERSION.SDK_INT < 29) {
+                if (imageUri != null && Build.VERSION.SDK_INT < 29) {
                     val pathId = ContentUris.parseId(imageUri)
                     val miniThumb = MediaStore.Images.Thumbnails.getThumbnail(
                             contentResolver, pathId, MediaStore.Images.Thumbnails.MINI_KIND, null)
@@ -258,15 +259,15 @@ internal object FileUtils {
 
         val values = ContentValues()
         if (android.os.Build.VERSION.SDK_INT < 29) {
-            values.put(MediaStore.Images.ImageColumns.DATA, imageFilePath)
+            values.put(MediaStore.Images.ImageColumns.DATA, inputPath)
         }
 
-        values.put(MediaStore.Images.Media.TITLE, file.name)
+        values.put(MediaStore.Images.Media.TITLE, inputFile.name)
         values.put(MediaStore.Images.Media.MIME_TYPE, mimeType)
         values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
         values.put(MediaStore.Images.Media.DATE_MODIFIED, System.currentTimeMillis() / 1000)
-        values.put(MediaStore.Images.Media.DISPLAY_NAME, file.name)
-        values.put(MediaStore.Images.Media.SIZE, file.length())
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, inputFile.name)
+        values.put(MediaStore.Images.Media.SIZE, inputFile.length())
 
         if (android.os.Build.VERSION.SDK_INT >= 29) {
             values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
